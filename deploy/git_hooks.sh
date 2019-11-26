@@ -23,7 +23,6 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 # if [[ $local_branch == *"developers"* ]]; then
     printf "\t\033[0;36mRunning pre-commit checks on your code...\033[0m\n"
     all_path=$(echo $all_changes_files_in_commit | tr -s " " "\012")
-
     PASS=true
 
     for addr in $all_path
