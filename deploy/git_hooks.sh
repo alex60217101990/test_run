@@ -18,23 +18,17 @@ fi
 last_commit=$(git rev-parse HEAD 2>&1)
 all_changes_files_in_commit=$(git show --name-only --oneline $last_commit)
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
-# echo $local_branch
+
 if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
-# if [[ $local_branch == *"developers"* ]]; then
-    printf "\t\033[0;36mRunning pre-commit checks on your code...\033[0m\n"
+    printf "\033[0;36mRunning pre-commit checks on your code...\033[0m\n"
     all_path=$(echo $all_changes_files_in_commit | tr -s " " "\012")
     PASS=true
-
     for addr in $all_path
         do
-            # [ -d "$addr" ] && echo "directory"
-            # [ -f "$addr" ] && echo "file"
             dir_name=$(dirname "${addr}")
         if [[ $dir_name != *"."* ]]; then
-            # echo $dir_name
             FILES=$(go list ./$dir_name/...)
             # Start GOLANG Static analysis...
-            # ===============================================
             # Format the Go code
             printf "\033[31m"
             go fmt ${FILES}
@@ -59,11 +53,9 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
             else
                 printf "\033[0;30m\033[42mGOLINT SUCCEEDED\033[0m\n"
             fi
-
             # Check all files for errors
             {
-	            # errcheck -ignoretests ${FILES} ????
-                errcheck ${FILES}
+	            errcheck -ignoretests ${FILES}
             } || {
 	            exitStatus=$?
 	            if [ $exitStatus ]; then
@@ -81,7 +73,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 		            exit 1
 	            fi
             }
-            # ===============================================
+
         fi
     done
 else
