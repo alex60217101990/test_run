@@ -81,26 +81,25 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
             printf "\033[0;35m$is_present\033[0m\n"
             if [ ! -z "$is_present" ]
             then
-                FILES=$(go list .)
                 # Start GOLANG Static analysis...
                 # Format the Go code
                 printf "\033[31m"
-                go fmt ${FILES}
+                go fmt ${is_present}
                 printf "\033[0m"
-                for FILE in $FILES 
-                do 
-                    git add $FILE
-                    # Run goimports on the staged file
-                    $GOIMPORTS -w $FILE
-                    # Run golint on the staged file and check the exit status
-                    $GOLINT "-set_exit_status" $FILE
-                    if [[ $? == 1 ]]; then
-                        printf "\033[31mgolint $FILE\033[0m \033[0;30m\033[41mFAILURE!\033[0m\n"
-                        PASS=false
-                    else
-                        printf "\033[32mgolint $FILE\033[0m \033[0;30m\n"
-                    fi
-                done
+
+# procedure ======>
+                git add $is_present
+                # Run goimports on the staged file
+                $GOIMPORTS -w $is_present
+                # Run golint on the staged file and check the exit status
+                $GOLINT "-set_exit_status" $is_present
+                if [[ $? == 1 ]]; then
+                    printf "\033[31mgolint $is_present\033[0m \033[0;30m\033[41mFAILURE!\033[0m\n"
+                    PASS=false
+                else
+                    printf "\033[32mgolint $is_present\033[0m \033[0;30m\n"
+                fi
+
                 if ! $PASS; then
                     printf "\033[0;30m\033[41mGOLINT FAILED\033[0m\n"
                     exit 1
@@ -109,7 +108,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
                 fi
                 # Check all files for errors
                 {
-	                errcheck -ignoretests ${FILES}
+	                errcheck -ignoretests ${is_present}
                 } || {
 	                exitStatus=$?
 	                if [ $exitStatus ]; then
@@ -119,7 +118,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
                 }
                 # Check all files for suspicious constructs
                 {
-	                go vet ${FILES}
+	                go vet ${is_present}
                 } || {
 	                exitStatus=$?
 	                if [ $exitStatus ]; then
@@ -127,6 +126,8 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 		                exit 1
 	                fi
                 }
+# procedure ======>
+                
             fi    
         # ==============
         fi
