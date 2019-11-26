@@ -7,5 +7,7 @@ import (
 
 func main() {
 	fmt.Println("HELLO WORLD!!!")
-	log.Println(111)
+	b := 0
+	a := 111/b
+	log.Println(a)
 }
