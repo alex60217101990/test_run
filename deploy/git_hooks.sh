@@ -24,6 +24,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
     all_path=$(echo $all_changes_files_in_commit | tr -s " " "\012")
     PASS=true
     for addr in $all_path
+
         do
             dir_name=$(dirname "${addr}")
             # echo "$dir_name"
@@ -74,7 +75,60 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 		            exit 1
 	            fi
             }
-
+        # ==============
+        else
+            is_present=$(find . -iname ${addr})
+            printf "\033[0;35m$is_present\033[0m\n"
+            if [ ! -z "$is_present" ]
+            then
+                FILES=$(go list .)
+                # Start GOLANG Static analysis...
+                # Format the Go code
+                printf "\033[31m"
+                go fmt ${FILES}
+                printf "\033[0m"
+                for FILE in $FILES 
+                do 
+                    git add $FILE
+                    # Run goimports on the staged file
+                    $GOIMPORTS -w $FILE
+                    # Run golint on the staged file and check the exit status
+                    $GOLINT "-set_exit_status" $FILE
+                    if [[ $? == 1 ]]; then
+                        printf "\033[31mgolint $FILE\033[0m \033[0;30m\033[41mFAILURE!\033[0m\n"
+                        PASS=false
+                    else
+                        printf "\033[32mgolint $FILE\033[0m \033[0;30m\n"
+                    fi
+                done
+                if ! $PASS; then
+                    printf "\033[0;30m\033[41mGOLINT FAILED\033[0m\n"
+                    exit 1
+                else
+                    printf "\033[0;30m\033[42mGOLINT SUCCEEDED\033[0m\n"
+                fi
+                # Check all files for errors
+                {
+	                errcheck -ignoretests ${FILES}
+                } || {
+	                exitStatus=$?
+	                if [ $exitStatus ]; then
+		                printf "\n\t\033[41mErrors found in your code, please fix them and try again.\033[0m\n"
+		                exit 1
+	                fi
+                }
+                # Check all files for suspicious constructs
+                {
+	                go vet ${FILES}
+                } || {
+	                exitStatus=$?
+	                if [ $exitStatus ]; then
+		                printf "\n\t\033[41mIssues found in your code, please fix them and try again.\033[0m\n"
+		                exit 1
+	                fi
+                }
+            fi    
+        # ==============
         fi
     done
 else
