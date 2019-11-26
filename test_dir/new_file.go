@@ -1,5 +1,4 @@
 package new_file
 
-func test() {
-	
+func test() {}
 }
