@@ -75,7 +75,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
             }
         else
             is_present=$(find . -iname ${addr})
-            printf "\033[0;35m$is_present\033[0m\n"
+            printf "\033[0;35mFile present on root project directory: $is_present\033[0m\n"
             if [ ! -z "$is_present" ]
             then
                 # Start GOLANG Static analysis...
