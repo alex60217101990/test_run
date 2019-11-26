@@ -16,7 +16,7 @@ if [[ ! -x "$GOIMPORTS" ]]; then
 fi
 
 last_commit=$(git rev-parse HEAD 2>&1)
-all_changes_files_in_commit=$(git show --name-only --oneline $last_commit)
+all_changes_files_in_commit=$(git show --name-only --oneline -- '*.go' $last_commit)
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
 
 if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
@@ -26,6 +26,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
     for addr in $all_path
         do
             dir_name=$(dirname "${addr}")
+            # echo "$dir_name"
         if [[ $dir_name != *"."* ]]; then
             FILES=$(go list ./$dir_name/...)
             # Start GOLANG Static analysis...
@@ -44,7 +45,7 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
                     printf "\033[31mgolint $FILE\033[0m \033[0;30m\033[41mFAILURE!\033[0m\n"
                     PASS=false
                 else
-                    printf "\033[32mgolint $FILE\033[0m \033[0;30m\033[42mpass\033[0m\n"
+                    printf "\033[32mgolint $FILE\033[0m \033[0;30m\n"
                 fi
             done
             if ! $PASS; then
