@@ -27,7 +27,6 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 
         do
             dir_name=$(dirname "${addr}")
-            # echo "$dir_name"
         if [[ $dir_name != *"."* ]]; then
             FILES=$(go list ./$dir_name/...)
             # Start GOLANG Static analysis...
@@ -75,7 +74,6 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 		            exit 1
 	            fi
             }
-        # ==============
         else
             is_present=$(find . -iname ${addr})
             printf "\033[0;35m$is_present\033[0m\n"
@@ -87,7 +85,6 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
                 go fmt ${is_present}
                 printf "\033[0m"
 
-# procedure ======>
                 git add $is_present
                 # Run goimports on the staged file
                 $GOIMPORTS -w $is_present
@@ -126,10 +123,8 @@ if [[ $local_branch == *"master"* || $local_branch == *"developers"* ]]; then
 		                exit 1
 	                fi
                 }
-# procedure ======>
                 
             fi    
-        # ==============
         fi
     done
 else
