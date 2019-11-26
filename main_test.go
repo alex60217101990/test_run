@@ -71,5 +71,4 @@ func TestCompute(t *testing.T) {
 	))
 
 	properties.TestingRun(t)
-	// ---
 }
