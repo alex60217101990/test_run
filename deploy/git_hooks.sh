@@ -18,21 +18,21 @@ fi
 last_commit=$(git rev-parse HEAD 2>&1)
 all_changes_files_in_commit=$(git show --name-only --oneline -- '*.go' $last_commit)
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
+valid_user_branch_main_regex="VCPSCLOUD-[0-9]{1,10}"
+valid_user_branch_regex="(WIP)-[a-z]{1,15}\/[A-Z]{1,5}-[0-9]{1,6}"
 
-valid_user_branch_regex="(feature|bugfix|hotfix)-[a-z]{1,15}\/[A-Z]{1,5}-[0-9]{1,6}"
-valid_release_branch_regex="release-\d{1,3}.\d{1,3}.\d{1,3}"
+if [[ $local_branch =~ $valid_user_branch_main_regex ]]; then
+    $wrong_user_branch=false
+fi
 
 wrong_user_branch=true
 if [[ $local_branch =~ $valid_user_branch_regex ]]; then
- $wrong_user_branch=false
+    $wrong_user_branch=false
 fi
-wrong_release_branch=false
-if [[ $local_branch =~ $valid_release_branch_regex ]]; then
- $wrong_release_branch=true
-fi
-if ($wrong_user_branch || $wrong_release_branch); then
+
+if ($wrong_user_branch); then
     printf "\n\033[41mThere is something wrong with your branch name. Branch names in this project must adhere to this contract:\n
-    'feature(bugfix/hotfix)-skreitor/PLA-1002' or 'release-1.2.3'.\n
+    'VCP-.\n
     Your push will be rejected. You should rename your branch to a valid name and try again.\033[0m\n"
     exit 1
 else
