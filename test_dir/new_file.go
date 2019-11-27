@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func test() {
+func Test() {
 	b := 0
 	a := 111 / b
 	log.Println(a)

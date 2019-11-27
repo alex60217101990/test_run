@@ -10,5 +10,5 @@ func main() {
 	// ---
 	// b := 0
 	// a := 111 / b
-	// log.Println(a)
+	test_dir.Test()
 }
