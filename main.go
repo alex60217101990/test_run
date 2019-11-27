@@ -10,6 +10,5 @@ func main() {
 	// ---
 	// b := 0
 	// a := 111 / b
-
 	test_dir.Test()
 }
