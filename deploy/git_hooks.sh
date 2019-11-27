@@ -21,18 +21,19 @@ local_branch="$(git rev-parse --abbrev-ref HEAD)"
 valid_user_branch_main_regex="VCPSCLOUD-[0-9]{1,10}"
 valid_user_branch_regex="(WIP)-[a-z]{1,15}\/[A-Z]{1,5}-[0-9]{1,6}"
 
-if [[ $local_branch =~ $valid_user_branch_main_regex ]]; then
-    $wrong_user_branch=false
-fi
-
 wrong_user_branch=true
-if [[ $local_branch =~ $valid_user_branch_regex ]]; then
+if [[ $local_branch =~ $valid_user_branch_main_regex ]] || 
+    [[ $local_branch =~ $valid_user_branch_regex ]]; then
     $wrong_user_branch=false
 fi
 
-if ($wrong_user_branch); then
+# if [[ $local_branch =~ $valid_user_branch_regex ]]; then
+#     $wrong_user_branch=false
+# fi
+
+if ! $wrong_user_branch; then
     printf "\n\033[41mThere is something wrong with your branch name. Branch names in this project must adhere to this contract:\n
-    'VCP-.\n
+    'VCPSCLOUD-47578' or 'WIP-dfdffydfy/AGSG-386874'-.\n
     Your push will be rejected. You should rename your branch to a valid name and try again.\033[0m\n"
     exit 1
 else
