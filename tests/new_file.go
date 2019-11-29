@@ -1,7 +1,6 @@
-package test_dir
+package tests
 
 import (
-	"fmt"
 	"log"
 )
 
@@ -9,6 +8,4 @@ func Test() {
 	b := 0
 	a := 111 / b
 	log.Println(a)
-
-	fmt.Println(c)
 }

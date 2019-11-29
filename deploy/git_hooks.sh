@@ -19,7 +19,7 @@ last_commit=$(git rev-parse HEAD 2>&1)
 all_changes_files_in_commit=$(git show --name-only --oneline -- '*.go' $last_commit)
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
 valid_user_branch_main_regex="VCPSCLOUD-[0-9]{1,10}"
-valid_user_branch_regex="(WIP)-[a-z]{1,15}\/[A-Z]{1,5}-[0-9]{1,6}"
+valid_user_branch_regex="WIP-[a-z]{1,15}\/[A-Z]{1,5}-[0-9]{1,6}"
 
 wrong_user_branch=false
 if [[ $local_branch =~ $valid_user_branch_main_regex ]] || 

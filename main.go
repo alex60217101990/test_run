@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"test_run/tests"
 )
 
 func main() {
@@ -10,5 +11,5 @@ func main() {
 	// ---
 	// b := 0
 	// a := 111 / b
-	test_dir.Test()
+	tests.Test()
 }
